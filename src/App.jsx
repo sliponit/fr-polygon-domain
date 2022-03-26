@@ -3,10 +3,14 @@ import { ethers } from "ethers";
 import './styles/App.css';
 import twitterLogo from './assets/twitter-logo.svg';
 import contractAbi from './utils/contractABI.json';
+import polygonLogo from './assets/polygonlogo.png';
+import ethLogo from './assets/ethlogo.png';
+import { networks } from './utils/networks';
+
 
 // Constants
 const tld = '.fr';
-const CONTRACT_ADDRESS = '0xf605A3A30aF2D2DD815679a0E72a694aD2a04590';
+const CONTRACT_ADDRESS = '0x19A7e5C936578eD1BA6E06CD2BE9ccc55ba5Cc47';
 const TWITTER_HANDLE = '_buildspace';
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
 
@@ -14,6 +18,7 @@ const App = () => {
 	const [currentAccount, setCurrentAccount] = useState('');
   const [domain, setDomain] = useState('');
   const [record, setRecord] = useState('');
+  const [network, setNetwork] = useState('');
 
   const connectWallet = async () => {
 		try {
@@ -55,6 +60,17 @@ const App = () => {
 			setCurrentAccount(account);
 		} else {
 			console.log('No authorized account found');
+		}
+
+    // This is the new part, we check the user's network chain ID
+		const chainId = await ethereum.request({ method: 'eth_chainId' });
+		setNetwork(networks[chainId]);
+
+		ethereum.on('chainChanged', handleChainChanged);
+		
+		// Reload the page when they change networks
+		function handleChainChanged(_chainId) {
+			window.location.reload();
 		}
 	};
 
@@ -107,6 +123,16 @@ const App = () => {
 
   // Form to enter domain name and data
 	const renderInputForm = () =>{
+    // If not on Polygon Mumbai Testnet, render "Please connect to Polygon Mumbai Testnet"
+  	if (network !== 'Polygon Mumbai Testnet') {
+  		return (
+  			<div className="connect-wallet-container">
+  				<p>Please connect to the Polygon Mumbai Testnet</p>
+  			</div>
+  		);
+  	}
+
+    // The rest of the function remains the same
 		return (
 			<div className="form-container">
 				<div className="first-row">
@@ -160,9 +186,13 @@ const App = () => {
 				<div className="header-container">
 					<header>
 						<div className="left">
-						<p className="title">🐱‍👤 FR Name Service</p>
-						<p className="subtitle">Your FR API on the blockchain!</p>
+						  <p className="title">🐱‍👤 FR Name Service</p>
+						  <p className="subtitle">Your FR API on the blockchain!</p>
 						</div>
+            <div className="right">
+        			<img alt="Network logo" className="logo" src={ network.includes("Polygon") ? polygonLogo : ethLogo} />
+        			{ currentAccount ? <p> Wallet: {currentAccount.slice(0, 6)}...{currentAccount.slice(-4)} </p> : <p> Not connected </p> }
+        		</div>
 					</header>
 				</div>
 
