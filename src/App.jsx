@@ -6,11 +6,12 @@ import contractAbi from './utils/contractABI.json';
 import polygonLogo from './assets/polygonlogo.png';
 import ethLogo from './assets/ethlogo.png';
 import { networks } from './utils/networks';
+import worker from './utils/worker.json'
 
 
 // Constants
 const tld = '.fr';
-const CONTRACT_ADDRESS = '0x19A7e5C936578eD1BA6E06CD2BE9ccc55ba5Cc47';
+const CONTRACT_ADDRESS = '0x7aBB00FAb52b1126F2b23f7946E94f3bD78377b4';
 const TWITTER_HANDLE = '_buildspace';
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
 
@@ -77,6 +78,15 @@ const App = () => {
 		}
 	};
 
+  const postPinata = async (name) => {
+    const headers = {
+      'X-API-KEY': worker['x-api-key'],
+      'content-type': 'application/json'
+    }
+    const response = await fetch(worker.url, { method: 'POST', headers, body: JSON.stringify({ name }) });
+    return response.json()
+  }
+
   const mintDomain = async () => {
   	// Don't run if the domain is empty
   	if (!domain) { return }
@@ -95,9 +105,11 @@ const App = () => {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
         const contract = new ethers.Contract(CONTRACT_ADDRESS, contractAbi, signer);
+
+        const { cid } = await postPinata(domain)
   
   			console.log("Going to pop wallet now to pay gas...")
-        let tx = await contract.register(domain, {value: ethers.utils.parseEther(price)});
+        let tx = await contract.register(domain, cid, {value: ethers.utils.parseEther(price)});
         // Wait for the transaction to be mined
   			const receipt = await tx.wait();
   
