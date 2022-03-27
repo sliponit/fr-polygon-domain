@@ -248,7 +248,7 @@ const App = () => {
 	// Create a function to render if wallet is not connected yet
 	const renderNotConnectedContainer = () => (
 		<div className="connect-wallet-container">
-			<img src="https://media.giphy.com/media/dWxFpBeot1S8MabzLA/giphy.gif" />
+			<img src="https://media1.giphy.com/media/H8WX4vpye42eeZ397I/giphy.webp?cid=ecf05e4764kdkxvxf4g54graqbwklbg1hr6bxcdosu935t4j&rid=giphy.webp&ct=g" />
 			<button onClick={connectWallet} className="cta-button connect-wallet-button">
 				Connect Wallet
 			</button>
@@ -313,15 +313,15 @@ const App = () => {
   				
   			// For each name, get the record and the address
   			const mintRecords = await Promise.all(names.map(async (name) => {
-  			const mintRecord = await contract.records(name);
-  			const owner = await contract.domains(name);
-  			return {
-  				id: names.indexOf(name),
-  				name: name,
-  				record: mintRecord,
-  				owner: owner,
-  			};
-  		}));
+          const mintRecord = await contract.records(name);
+          const owner = await contract.domains(name);
+          return {
+            id: names.indexOf(name),
+            name: name,
+            record: mintRecord,
+            owner: owner,
+          };
+        }));
   
   		console.log("MINTS FETCHED ", mintRecords);
   		setMints(mintRecords);
