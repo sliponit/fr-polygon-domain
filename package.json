@@ -1,6 +1,8 @@
 {
   "name": "polygon-fr-domains",
   "version": "0.0.1",
+  "author": "sliponit <sliponit@pm.me>",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

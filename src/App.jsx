@@ -344,8 +344,8 @@ const App = () => {
 				<div className="header-container">
 					<header>
 						<div className="left">
-						  <p className="title">🐱‍👤 FR Name Service</p>
-						  <p className="subtitle">Your FR API on the blockchain!</p>
+						  <p className="title">🇫🇷 Fr Name Service</p>
+						  <p className="subtitle">Your .fr API on the polygon blockchain!</p>
 						</div>
             <div className="right">
         			<img alt="Network logo" className="logo" src={ network.includes("Polygon") ? polygonLogo : ethLogo} />
